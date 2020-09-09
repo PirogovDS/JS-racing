@@ -11,7 +11,7 @@ document.addEventListener('keyup', stopRun);
 
 const keys = {
     ArrowUp: false,
-    ArrowDwn: false,
+    ArrowDown: false,
     ArrowRight: false,
     ArrowLeft: false
 };
@@ -24,14 +24,40 @@ const setting = {
 
 function startGame() {
     start.classList.add('hide');
+
+    for (let i = o; i < 20; i++) {
+        const line = document.createElement('div');
+        line.classList.add('line');
+        line.style.top = (i * 100) + 'px';
+        line.y = i * 100;
+
+        gamearea.appendChild(line);
+    }
+
     setting.start = true;
     gamearea.appendChild(car);
+    setting.x = car.offsetLeft;
+    setting.y = car.offsetTop;
     requestAnimationFrame(playGame);
 };
 
 function playGame() {
-    console.log('Play game!');
     if (setting.start) {
+        moveRoad();
+        if (keys.ArrowLeft && setting.x > 0) {
+            setting.x -= setting.speed;
+        }
+        if (keys.ArrowRight && setting.x < (gamearea.offsetWidth - car.offsetWidth)) {
+            setting.x += setting.speed;
+        }
+        if (keys.ArrowDown) {
+            setting.y += setting.speed;
+        }
+        if (keys.ArrowUp && setting.y > (gamearea.offsetHeight - car.offsetHeight)) {
+            setting.y -= setting.speed;
+        }
+        car.style.left = setting.x + 'px';
+
         requestAnimationFrame(playGame);
     };
 };
@@ -45,3 +71,9 @@ function stopRun(event) {
     event.preventDefault();
     keys[event.key] = false;
 };
+function moveRoad() {
+    let lines = document.querySelectorAll('line');
+    lines.forEach(function (line, i) {
+        console.log(line);
+    })
+}
